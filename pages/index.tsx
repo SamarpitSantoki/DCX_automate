@@ -4,15 +4,17 @@ import Coin from "../components/Coin";
 
 export default function Home() {
   const [coins, setCoins] = useState([]);
-
+  let update = null;
   console.log("fromHere");
   useEffect(() => {
-    async function fetch_data() {
-      const { data } = await axios.get("/api/getBalance");
-      console.log("from too");
-      setCoins(data);
-    }
-    fetch_data();
+    update = setInterval(() => {
+      async function fetch_data() {
+        const { data } = await axios.get("http://localhost:4000/fetchbalance");
+        console.log("from too");
+        setCoins(data);
+      }
+      fetch_data();
+    }, 1000 * 15);
     console.log("fromThere");
   }, []);
   return (
@@ -45,9 +47,12 @@ export default function Home() {
             {coins.map((coin) => {
               return (
                 <Coin
-                  coin={coin.currency}
-                  quantity={coin.balance}
-                  key={coin.currency}
+                  currency={coin.currency}
+                  balance={coin.balance}
+                  hourlyPrice={coin.hourlyPrice}
+                  _8hourlyPrice={coin._8hourlyPrice}
+                  _16hourlyPrice={coin._16hourlyPrice}
+                  _24hourlyPrice={coin._24hourlyPrice}
                 />
               );
             })}
